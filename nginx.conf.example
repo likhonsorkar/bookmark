@@ -1,0 +1,23 @@
+# Example nginx server block for bookmark.likhon.com.bd
+# Only needed if you self-host (skip this file if you deploy on Vercel/Netlify —
+# use vercel.json or public/_redirects instead).
+
+server {
+    listen 80;
+    server_name bookmark.likhon.com.bd;
+
+    root /var/www/bookmark/dist;   # the `npm run build` output
+    index index.html;
+
+    # Serve the built React app, falling back to index.html for client-side routes
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # Reverse proxy so the browser only ever calls its own origin (no CORS)
+    location /api/ {
+        proxy_pass https://publicapi.likhon.com.bd/;
+        proxy_set_header Host publicapi.likhon.com.bd;
+        proxy_ssl_server_name on;
+    }
+}

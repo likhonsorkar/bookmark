@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-paper text-ink font-sans;
+  background-image: linear-gradient(180deg, #f3e9f5 0%, #faf6ef 240px);
+}
+
+::selection {
+  @apply bg-brand-amber text-ink;
+}

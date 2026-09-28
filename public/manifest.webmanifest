@@ -1,0 +1,21 @@
+{
+  "name": "Bookmark",
+  "short_name": "Bookmark",
+  "description": "দোকানের দরকারি বুকমার্ক, নেসকো বিল চেক ও ক্যাশ মেমো",
+  "lang": "bn",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#0b65de",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "নেসকো প্রিপেইড", "url": "/prepaid", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "নেসকো পোস্টপেইড", "url": "/postpaid", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "ক্যাশ মেমো", "url": "/invoice", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
