@@ -3,6 +3,7 @@
 // setting used for the NESCO token receipt.
 import { loadSettings } from '../settings.js'
 import { esc, nl2br, pageCss, openPrintWindow } from './shared.js'
+import { toNumber, money } from '../numbers.js'
 
 const LABELS = {
   bn: {
@@ -47,8 +48,8 @@ export function printInvoice({ customer, items, discount }) {
   const shopInfo = settings.shop?.[settings.language] || {}
 
   const rows = (items || []).filter((i) => i.product || i.qty || i.price)
-  const subtotal = rows.reduce((sum, i) => sum + (Number(i.qty) || 0) * (Number(i.price) || 0), 0)
-  const discountNum = Number(discount) || 0
+  const subtotal = rows.reduce((sum, i) => sum + toNumber(i.qty) * toNumber(i.price), 0)
+  const discountNum = toNumber(discount)
   const total = Math.max(subtotal - discountNum, 0)
 
   const now = new Date()
@@ -70,12 +71,12 @@ export function printInvoice({ customer, items, discount }) {
 
   const itemRows = rows
     .map((i) => {
-      const net = (Number(i.qty) || 0) * (Number(i.price) || 0)
+      const net = toNumber(i.qty) * toNumber(i.price)
       return `<tr>
         <td class="p-name">${esc(i.product)}</td>
         <td class="p-num">${esc(i.qty)}</td>
         <td class="p-num">${esc(i.price)}</td>
-        <td class="p-num">${net.toFixed(2)}</td>
+        <td class="p-num">${money(net)}</td>
       </tr>`
     })
     .join('')
@@ -140,13 +141,13 @@ export function printInvoice({ customer, items, discount }) {
     <tbody>${itemRows}</tbody>
   </table>
   <table class="sums">
-    <tr><td>${esc(t.subtotal)}</td><td class="value">${subtotal.toFixed(2)} ${esc(t.tk)}</td></tr>
+    <tr><td>${esc(t.subtotal)}</td><td class="value">${money(subtotal)} ${esc(t.tk)}</td></tr>
     ${
       discountNum
-        ? `<tr><td>${esc(t.discount)}</td><td class="value">-${discountNum.toFixed(2)} ${esc(t.tk)}</td></tr>`
+        ? `<tr><td>${esc(t.discount)}</td><td class="value">-${money(discountNum)} ${esc(t.tk)}</td></tr>`
         : ''
     }
-    <tr class="grand"><td>${esc(t.total)}</td><td class="value">${total.toFixed(2)} ${esc(t.tk)}</td></tr>
+    <tr class="grand"><td>${esc(t.total)}</td><td class="value">${money(total)} ${esc(t.tk)}</td></tr>
   </table>
   <div class="sign">
     <div class="sign-line"><div class="line"></div>${esc(t.signature)}</div>

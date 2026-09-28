@@ -35,9 +35,14 @@ export function openPrintWindow(html, blockedMessage) {
   win.document.open()
   win.document.write(html)
   win.document.close()
-  win.onload = () => {
+  let done = false
+  const go = () => {
+    if (done || win.closed) return
+    done = true
     win.focus()
     win.print()
   }
+  win.onload = go
+  setTimeout(go, 1200) // fallback if the load event never fires (slow/offline fonts)
   return win
 }

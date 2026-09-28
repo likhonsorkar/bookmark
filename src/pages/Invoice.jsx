@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { printInvoice } from '../print/invoice.js'
+import { toNumber, money } from '../numbers.js'
 
 function emptyItem() {
   return { id: Math.random().toString(36).slice(2), product: '', qty: '', price: '' }
@@ -22,12 +23,12 @@ export default function Invoice() {
     setItems((prev) => (prev.length > 1 ? prev.filter((it) => it.id !== id) : prev))
   }
 
-  const subtotal = items.reduce((sum, it) => sum + (Number(it.qty) || 0) * (Number(it.price) || 0), 0)
-  const discountNum = Number(discount) || 0
+  const subtotal = items.reduce((sum, it) => sum + toNumber(it.qty) * toNumber(it.price), 0)
+  const discountNum = toNumber(discount)
   const total = Math.max(subtotal - discountNum, 0)
 
   function handlePrint() {
-    printInvoice({ customer, items, discount: discountNum })
+    printInvoice({ customer, items, discount })
   }
 
   return (
@@ -82,7 +83,7 @@ export default function Invoice() {
 
         <div className="space-y-2">
           {items.map((it) => {
-            const net = (Number(it.qty) || 0) * (Number(it.price) || 0)
+            const net = toNumber(it.qty) * toNumber(it.price)
             return (
               <div
                 key={it.id}
@@ -108,7 +109,7 @@ export default function Invoice() {
                   inputMode="decimal"
                   className="px-3 py-2 rounded-lg border border-line bg-paper text-sm"
                 />
-                <span className="px-1 text-sm text-right font-medium">{net ? net.toFixed(2) : '—'}</span>
+                <span className="px-1 text-sm text-right font-medium">{net ? money(net) : '—'}</span>
                 <button
                   onClick={() => removeRow(it.id)}
                   className="text-gray-400 hover:text-brand-red text-lg leading-none justify-self-end"
@@ -125,7 +126,7 @@ export default function Invoice() {
       <div className="bg-white border border-line rounded-xl p-5 mb-5">
         <div className="flex justify-between items-center py-1 text-sm">
           <span className="text-gray-500">সাবটোটাল</span>
-          <span>{subtotal.toFixed(2)} টাকা</span>
+          <span>{money(subtotal)} টাকা</span>
         </div>
         <div className="flex justify-between items-center py-1 text-sm">
           <label htmlFor="discount" className="text-gray-500">
@@ -142,7 +143,7 @@ export default function Invoice() {
         </div>
         <div className="flex justify-between items-center pt-2 mt-2 border-t border-line font-semibold text-base">
           <span>সর্বমোট</span>
-          <span>{total.toFixed(2)} টাকা</span>
+          <span>{money(total)} টাকা</span>
         </div>
       </div>
 
